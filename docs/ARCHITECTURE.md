@@ -9,19 +9,25 @@ Banking.Api ───────→ Banking.Application ←────── B
 ```
 
 - `Banking.Domain` contiene entidades, `TransactionType` y excepciones de dominio. No depende de frameworks externos.
-- `Banking.Application` contiene contratos HTTP reutilizables, interfaces, servicios y casos de uso. Depende solo del dominio y de abstracciones de DI.
+- `Banking.Application` contiene contratos, interfaces, servicios y casos de uso. Depende del dominio.
 - `Banking.Infrastructure` implementa repositorios y unidad de trabajo con EF Core y SQLite.
 - `Banking.Api` compone dependencias, expone controllers delgados y traduce excepciones a HTTP.
 
 ## Flujo de una solicitud
 
 ```text
+React Web
+    ↓ HTTP/JSON
 Request → Controller → Application Service → Repository → EF Core → SQLite
                                                 ↓
 Response DTO ← Controller ← Application Service
+    ↓
+React Web
 ```
 
 Los controllers reciben DTOs, delegan y devuelven códigos HTTP. Las reglas sobre saldo, montos y fondos permanecen en dominio/aplicación.
+
+La web funciona como cliente del contrato HTTP. No accede a EF Core, no calcula saldos, no genera números de cuenta y no replica la validación definitiva de fondos.
 
 ## Persistencia e integridad
 
@@ -34,6 +40,8 @@ La unidad de trabajo abre una transacción para cada depósito o retiro. El sald
 ## Errores
 
 Los servicios lanzan excepciones específicas. `GlobalExceptionHandler`, basado en `IExceptionHandler`, genera `ProblemDetails` seguros y consistentes sin `try/catch` repetidos en controllers.
+
+La web normaliza esas respuestas y las presenta como mensajes de contexto. El rechazo de fondos insuficientes no altera el saldo ni agrega una transacción.
 
 ## Integration testing
 
@@ -53,6 +61,10 @@ SQLite temporal
 
 `BankingApiFactory` sustituye únicamente la conexión de base de datos por un archivo temporal único y ejecuta `MigrateAsync`. Controllers, servicios, repositorios, manejo de errores y migraciones son los mismos de la aplicación. Estos tests no leen ni modifican la `banking.db` de desarrollo.
 
-## Clientes futuros
+## Clientes
 
-React Web y Flutter Mobile consumirán `Banking.Api` mediante HTTPS/JSON. Ambos reutilizarán los mismos contratos y toda regla financiera seguirá ejecutándose en backend. Transferencias, monedas, autenticación y otros servicios futuros pueden agregarse como nuevos casos de uso sin acoplarlos a la presentación actual.
+La aplicación React ya consume `Banking.Api` mediante HTTP/JSON y demuestra el flujo completo solicitado: clientes, cuentas, saldo, depósitos, retiros e historial.
+
+`mobile/` permanece como fase futura prevista en Flutter. Si se implementa, deberá consumir los mismos contratos y mantener las reglas financieras exclusivamente en el backend.
+
+Transferencias, autenticación, tarjetas, múltiples monedas y otros servicios futuros deben agregarse como nuevos casos de uso del backend antes de exponerse en clientes.

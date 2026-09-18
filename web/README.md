@@ -14,7 +14,8 @@ La web permite:
 - ver el saldo entregado por el servidor;
 - depositar y retirar;
 - presentar fondos insuficientes y otros errores de forma amigable;
-- consultar movimientos con su `BalanceAfterTransaction` histórico.
+- consultar movimientos con identificador, tipo, monto, timestamp y `BalanceAfterTransaction` histórico;
+- copiar la referencia completa de una transacción desde su representación visual truncada.
 
 No implementa autenticación, transferencias, tarjetas, préstamos, remesas, ACH, múltiples monedas ni información que la API actual no expone.
 
@@ -56,7 +57,7 @@ Typed API client
 Banking.Api
 ```
 
-Las llamadas HTTP permanecen en `src/api/banking-api.ts`. Tras un depósito o retiro se invalidan las queries de saldo e historial, y ambos datos se solicitan nuevamente. El cliente no genera números de cuenta, no calcula saldos y no decide si existen fondos suficientes.
+Las llamadas HTTP permanecen en `src/api/banking-api.ts`. Tras un depósito o retiro se invalidan las queries de saldo e historial y ambos datos se solicitan nuevamente. El cliente no genera números de cuenta, no calcula saldos y no decide si existen fondos suficientes.
 
 ## Rutas
 
@@ -93,20 +94,39 @@ Si la variable no está definida, el cliente usa `http://localhost:5097` como va
 
 ## Ejecutar
 
-Inicia la API desde `backend/`:
+Primero inicia la API desde `backend/`:
 
 ```powershell
 dotnet run --project src/Banking.Api/Banking.Api.csproj
 ```
 
-Luego inicia la web:
+Después, en otra terminal:
 
 ```powershell
 cd web
 npm run dev
 ```
 
-Vite sirve la aplicación en `http://localhost:5173`.
+La configuración de Vite usa `127.0.0.1:5173` como host local.
+
+```text
+http://127.0.0.1:5173
+```
+
+La API también permite `http://localhost:5173` durante desarrollo.
+
+## Flujo recomendado para evaluación manual
+
+1. Crear un cliente.
+2. Copiar o continuar con el `CustomerId`.
+3. Abrir una cuenta con saldo inicial.
+4. Entrar al detalle de la cuenta.
+5. Registrar un depósito.
+6. Registrar un retiro válido.
+7. Intentar un retiro superior al saldo.
+8. Verificar que el saldo no cambió tras el rechazo.
+9. Revisar el historial cronológico.
+10. Confirmar que cada movimiento muestra referencia, tipo, fecha/hora, monto y saldo posterior.
 
 ## Calidad
 
@@ -138,7 +158,7 @@ No se usa `AllowAnyOrigin` y no se habilita una política abierta en producción
 
 ## Dirección visual
 
-La interfaz usa un **visual system inspired by publicly available LAFISE digital experiences**. Se estudiaron las páginas públicas de LAFISE y los assets públicos enlazados por ellas para abstraer su uso de fondos aqua, verde vivo, cyan, cards blancas, saldo protagonista, acciones rápidas y movimientos de baja densidad.
+La interfaz usa un **visual system inspired by publicly available LAFISE digital experiences**. Se estudiaron páginas y experiencias públicas de LAFISE para abstraer patrones de fondos aqua, verde vivo, cyan, cards blancas, saldo protagonista, acciones rápidas y movimientos de baja densidad.
 
 El home usa una composición propia construida con HTML y CSS. No incorpora capturas, fotografías ni código de los sitios de referencia. El header emplea un wordmark textual sencillo porque el repositorio no contiene un logo oficial autorizado.
 

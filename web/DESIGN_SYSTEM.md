@@ -12,11 +12,11 @@ Revisión realizada el 18 de septiembre de 2026:
 - [LAFISE Digital en App Store](https://apps.apple.com/ni/app/lafise-digital/id6575295212)
 - [LAFISE Digital en Google Play](https://play.google.com/store/apps/details?id=com.lafise.lafiseone)
 
-Los assets públicos enlazados por esos sitios muestran una experiencia luminosa con fondos aqua, superficies blancas, verde vivo, cyan y azul; la app prioriza saldo, acciones circulares y movimientos recientes. Este proyecto abstrae esos patrones mediante componentes propios y no distribuye los assets utilizados durante la investigación.
+El proyecto abstrae patrones públicos de fondos aqua, superficies blancas, verde vivo, cyan, saldo protagonista, acciones rápidas y movimientos de baja densidad mediante componentes propios.
 
 ## Dirección visual
 
-1. **Producto financiero:** el saldo, la cuenta y las acciones principales dominan la jerarquía.
+1. **Producto financiero:** saldo, cuenta y acciones principales dominan la jerarquía.
 2. **Ligereza:** blanco y fondos aqua sustituyen superficies oscuras o administrativas.
 3. **Cercanía:** copy breve, radios amplios y acciones fáciles de reconocer.
 4. **Baja densidad:** listas limpias, espacio generoso y pocos bordes visibles.
@@ -24,7 +24,7 @@ Los assets públicos enlazados por esos sitios muestran una experiencia luminosa
 
 ## Color tokens
 
-These are **colors selected to visually align with publicly available LAFISE digital interfaces**. No se presentan como colores oficiales.
+Los colores fueron seleccionados para alinearse visualmente con experiencias digitales públicas de LAFISE. No se presentan como colores oficiales.
 
 | Token | Valor | Uso |
 |---|---:|---|
@@ -39,87 +39,60 @@ These are **colors selected to visually align with publicly available LAFISE dig
 | `--blue-soft` | `#EAF3FC` | Fondos azules suaves |
 | `--surface` | `#FFFFFF` | Formularios, cards y movimientos |
 | `--surface-soft` | `#F5FAF8` | Fondo general |
-| `--border` | `#D9E8E1` | Controles y separadores necesarios |
+| `--border` | `#D9E8E1` | Controles y separadores |
 | `--text-primary` | `#17342C` | Texto principal |
 | `--text-secondary` | `#587068` | Texto de apoyo |
 | `--success` | `#008B50` | Depósitos y confirmaciones |
 | `--danger` | `#C53946` | Errores y confirmación de retiro |
-| `--warning` | `#A56C12` | Advertencias |
-
-Los gradientes se reservan para el hero, la tarjeta financiera y la composición de producto.
 
 ## Tipografía
 
-Se conserva **Plus Jakarta Sans Variable**, instalada localmente con `@fontsource`.
+Se usa **Plus Jakarta Sans Variable**, instalada localmente con `@fontsource`.
 
 - cuerpo y ayudas: 400–500;
 - botones y labels: 500–600;
 - títulos y saldos: 600–700;
 - cantidades: cifras tabulares mediante `.financial-number`.
 
-No se presenta como tipografía oficial. Se seleccionó por legibilidad y claridad en cifras financieras.
-
-## Spacing
-
-La escala usa una base de 4 px:
-
-| Token | Valor |
-|---|---:|
-| `--space-1` | `4px` |
-| `--space-2` | `8px` |
-| `--space-3` | `12px` |
-| `--space-4` | `16px` |
-| `--space-5` | `20px` |
-| `--space-6` | `24px` |
-| `--space-8` | `32px` |
-| `--space-10` | `40px` |
-| `--space-12` | `48px` |
-
-El espacio entre secciones supera al espacio interno de cada grupo para comunicar jerarquía sin depender de cajas.
+No se presenta como tipografía oficial.
 
 ## Navegación
 
-En escritorio se usa un header superior blanco con wordmark textual, navegación central y acceso a consulta. La selección se indica mediante texto verde y una línea inferior discreta.
+En escritorio se usa un header superior blanco con wordmark textual, navegación central y acceso a consulta.
 
-En móvil se conserva un header compacto y se usa navegación inferior con icono y texto. El significado nunca depende únicamente del icono.
-
-## Cards
-
-Las cards de acción usan fondo blanco, un único borde tenue y sombra casi imperceptible. El hover eleva cuatro píxeles y refuerza suavemente la sombra.
-
-Se evita envolver cada dato en una card. Formularios y resultados se agrupan solo cuando existe una relación clara entre ellos.
+En móvil se conserva un header compacto y navegación inferior con icono y texto. El significado nunca depende únicamente del icono.
 
 ## Financial cards
 
-`.financial-card` combina verde, turquesa y geometría curva de baja opacidad. Se usa para:
+`.financial-card` combina verde, turquesa y geometría curva de baja opacidad. Se usa para el saldo del detalle de cuenta y el resultado de apertura.
 
-- el saldo del detalle de cuenta;
-- el resultado de apertura de cuenta.
-
-La jerarquía es: contexto, saldo, número de cuenta y acción. Los números financieros usan cifras tabulares y el saldo puede ocultarse visualmente sin alterar datos.
+La jerarquía es: contexto, saldo, número de cuenta y acción.
 
 ## Transaction rows
 
-Los movimientos forman una lista con separadores suaves:
+Cada movimiento incluye:
 
 - icono circular;
-- tipo y fecha;
+- tipo;
+- fecha/hora;
+- referencia de transacción truncada;
+- acción de copiar el identificador completo;
 - signo y monto;
 - saldo posterior.
 
-Depósito usa flecha descendente, signo positivo, texto y verde. Retiro usa flecha ascendente, signo negativo, texto y azul. El color es un apoyo adicional.
+Depósito usa signo positivo y verde. Retiro usa signo negativo y azul. El color es un apoyo adicional, no la única señal.
 
 ## Forms
 
 - labels persistentes;
 - altura mínima de 52 px;
-- radio de 16 px;
+- radio amplio;
 - foco cyan visible;
-- hint o error asociado con `aria-describedby`;
+- hint o error asociado;
 - validación inmediata mediante Zod;
 - botones principales verdes y redondeados.
 
-La creación de cliente y cuenta usa composiciones centrales, superficies blancas y estados de éxito integrados. El identificador del cliente se presenta con lenguaje comprensible y acción para copiar.
+La creación de cliente y cuenta usa composiciones centrales con estados de éxito integrados.
 
 ## Modal y bottom sheet
 
@@ -127,43 +100,40 @@ Depósito y retiro comparten un componente Radix Dialog:
 
 - en móvil aparece como bottom sheet;
 - desde 640 px aparece centrado;
-- muestra cuenta enmascarada y saldo actual;
+- muestra cuenta y saldo actual;
 - usa un campo monetario destacado;
 - presenta errores del servidor dentro del flujo.
 
-El saldo mostrado no se usa para decidir si un retiro es válido. Esa decisión continúa en el servidor.
+El saldo mostrado no decide si un retiro es válido. Esa decisión continúa en el servidor.
 
 ## Estados
 
 - **Loading:** skeletons suaves.
-- **Empty:** mensaje breve y calmado.
+- **Empty:** mensaje breve.
 - **Error:** título y detalle normalizados.
 - **Success:** resultado contextual y toast corto.
-- **Submitting:** spinner, label de progreso y botón deshabilitado.
+- **Submitting:** progreso y botón deshabilitado.
 - **Disabled:** menor contraste y sin interacción.
 
 ## Responsive
 
-- **320–639 px:** cards apiladas, footer y navegación inferior, sheet de ancho completo.
+- **320–639 px:** cards apiladas, navegación inferior y bottom sheet.
 - **640–1023 px:** más espacio, botones en fila y modal centrado.
 - **1024 px o más:** hero en dos columnas, navegación superior y formularios con panel contextual.
-
-El contenido tiene un ancho máximo de 76 rem y paddings laterales progresivos.
 
 ## Accesibilidad
 
 - enlace para saltar al contenido;
 - labels reales y mensajes asociados;
 - foco visible;
-- navegación completa por teclado;
+- navegación por teclado;
 - targets táctiles amplios;
 - estados disabled;
 - icono, texto y signo para movimientos;
-- contraste revisado para texto funcional;
-- `prefers-reduced-motion` reduce animaciones y transiciones.
+- `prefers-reduced-motion` reduce animaciones.
 
 ## Moneda y fechas
 
 `formatCurrency()` usa `Intl.NumberFormat` con `es-NI` y `NIO`, presentado como C$. Es una decisión visual contextual: el backend no contiene `Currency`.
 
-Fechas y horas usan `America/Managua`. `getNicaraguaToday()` construye la fecha local mediante `Intl.DateTimeFormat.formatToParts`, evitando el desfase potencial de `toISOString()`.
+Fechas y horas usan `America/Managua`. `getNicaraguaToday()` construye la fecha local mediante `Intl.DateTimeFormat.formatToParts`.
