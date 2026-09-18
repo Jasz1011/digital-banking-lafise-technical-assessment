@@ -6,6 +6,18 @@ namespace Banking.UnitTests;
 public sealed class TransactionHistoryTests
 {
     [Fact]
+    public async Task GetHistory_AccountWithoutMovements_ReturnsEmptyCollection()
+    {
+        var fixture = new BankingServiceFixture();
+
+        var history = await fixture.TransactionService.GetHistoryAsync(
+            fixture.Account.AccountNumber,
+            CancellationToken.None);
+
+        Assert.Empty(history);
+    }
+
+    [Fact]
     public async Task GetHistory_MultipleMovements_ReturnsChronologicalHistoricalBalances()
     {
         var fixture = new BankingServiceFixture();
@@ -40,4 +52,3 @@ public sealed class TransactionHistoryTests
             });
     }
 }
-

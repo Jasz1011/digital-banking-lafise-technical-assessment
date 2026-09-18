@@ -13,12 +13,38 @@ public sealed class CustomerValidationTests
     public void Create_EmptyFullName_Throws()
     {
         Assert.Throws<DomainValidationException>(() => Customer.Create(
+            string.Empty,
+            new DateOnly(1990, 1, 1),
+            "Femenino",
+            20_000m,
+            CreatedAt,
+            CurrentDate));
+    }
+
+    [Fact]
+    public void Create_WhitespaceFullName_Throws()
+    {
+        Assert.Throws<DomainValidationException>(() => Customer.Create(
             "   ",
             new DateOnly(1990, 1, 1),
             "Femenino",
             20_000m,
             CreatedAt,
             CurrentDate));
+    }
+
+    [Fact]
+    public void Create_NameWithNicaraguanCharacters_Succeeds()
+    {
+        var customer = Customer.Create(
+            "  María-José O'Ñate  ",
+            new DateOnly(1990, 1, 1),
+            "Femenino",
+            20_000m,
+            CreatedAt,
+            CurrentDate);
+
+        Assert.Equal("María-José O'Ñate", customer.FullName);
     }
 
     [Fact]
@@ -53,6 +79,32 @@ public sealed class CustomerValidationTests
             new DateOnly(1990, 1, 1),
             "Femenino",
             -0.01m,
+            CreatedAt,
+            CurrentDate));
+    }
+
+    [Fact]
+    public void Create_ZeroMonthlyIncome_Succeeds()
+    {
+        var customer = Customer.Create(
+            "María Elena Ruiz",
+            new DateOnly(1990, 1, 1),
+            "Femenino",
+            0m,
+            CreatedAt,
+            CurrentDate);
+
+        Assert.Equal(0m, customer.MonthlyIncome);
+    }
+
+    [Fact]
+    public void Create_EmptyGender_Throws()
+    {
+        Assert.Throws<DomainValidationException>(() => Customer.Create(
+            "María Elena Ruiz",
+            new DateOnly(1990, 1, 1),
+            string.Empty,
+            20_000m,
             CreatedAt,
             CurrentDate));
     }

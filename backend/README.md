@@ -122,11 +122,30 @@ Swagger documenta requests, responses, estados HTTP y los errores relevantes de 
 
 ## Tests
 
+La solución contiene **41 pruebas automatizadas**:
+
+- **33 unit tests:** validan reglas de dominio y servicios de aplicación de forma aislada mediante repositorios en memoria y un reloj controlable.
+- **8 integration tests:** levantan la API con `WebApplicationFactory`, aplican las migraciones reales y usan una base SQLite temporal aislada.
+
+Las categorías unitarias cubren `AccountNumberGenerator`, clientes, cuentas, depósitos, retiros e historial de transacciones.
+
+Los tests de integración verifican:
+
+- creación válida de customer → `201 Created`;
+- JSON inválido → `400 Bad Request`;
+- `customerId` mal formado → `400 Bad Request`;
+- cuenta inexistente → `404 Not Found` con ProblemDetails;
+- retiro sin fondos → `400 Bad Request` con ProblemDetails;
+- restricción `UNIQUE` real de `AccountNumber` en SQLite;
+- `FullName` y `Gender` que exceden sus longitudes → `400 Bad Request`.
+
+Desde `backend/`:
+
 ```bash
 dotnet test Banking.sln
 ```
 
-La suite cubre el formato y unicidad básica del generador, validaciones de clientes y cuentas, creación de cuentas, colisiones, depósitos, retiros, fondos insuficientes e historial cronológico.
+Resultado validado: **41 aprobadas, 0 fallidas, 0 omitidas**. El detalle completo está en [TESTING.md](../docs/TESTING.md).
 
 ## Endpoints
 
@@ -162,4 +181,3 @@ Las respuestas no exponen stack traces, SQL ni detalles internos.
 - El saldo inicial crea el estado inicial de la cuenta; el historial contiene únicamente depósitos y retiros solicitados.
 
 Para ejemplos de requests y responses, consulta [API_EXAMPLES.md](../docs/API_EXAMPLES.md).
-

@@ -61,6 +61,19 @@ public sealed class BankAccountServiceTests
     }
 
     [Fact]
+    public async Task CreateAccount_ZeroInitialBalance_PersistsZeroBalance()
+    {
+        var context = CreateContext();
+
+        var response = await context.Service.CreateAsync(
+            new CreateBankAccountRequest(context.Customer.Id, 0m),
+            CancellationToken.None);
+
+        Assert.Equal(0m, response.Balance);
+        Assert.Equal(0m, context.Accounts.Accounts.Single().Balance);
+    }
+
+    [Fact]
     public async Task CreateAccount_FirstNumberCollides_GeneratesAnotherNumber()
     {
         var context = CreateContext(
@@ -122,4 +135,3 @@ public sealed class BankAccountServiceTests
         MutableTimeProvider TimeProvider,
         Customer Customer);
 }
-

@@ -35,7 +35,24 @@ La unidad de trabajo abre una transacción para cada depósito o retiro. El sald
 
 Los servicios lanzan excepciones específicas. `GlobalExceptionHandler`, basado en `IExceptionHandler`, genera `ProblemDetails` seguros y consistentes sin `try/catch` repetidos en controllers.
 
+## Integration testing
+
+Los integration tests recorren la aplicación completa con infraestructura aislada:
+
+```text
+WebApplicationFactory
+        ↓
+ASP.NET Core real
+        ↓
+Application Services
+        ↓
+EF Core
+        ↓
+SQLite temporal
+```
+
+`BankingApiFactory` sustituye únicamente la conexión de base de datos por un archivo temporal único y ejecuta `MigrateAsync`. Controllers, servicios, repositorios, manejo de errores y migraciones son los mismos de la aplicación. Estos tests no leen ni modifican la `banking.db` de desarrollo.
+
 ## Clientes futuros
 
 React Web y Flutter Mobile consumirán `Banking.Api` mediante HTTPS/JSON. Ambos reutilizarán los mismos contratos y toda regla financiera seguirá ejecutándose en backend. Transferencias, monedas, autenticación y otros servicios futuros pueden agregarse como nuevos casos de uso sin acoplarlos a la presentación actual.
-

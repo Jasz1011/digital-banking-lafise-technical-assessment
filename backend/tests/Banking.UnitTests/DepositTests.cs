@@ -1,5 +1,6 @@
 using Banking.Domain.Enums;
 using Banking.Domain.Exceptions;
+using Banking.Application.Exceptions;
 using Banking.UnitTests.TestDoubles;
 
 namespace Banking.UnitTests;
@@ -54,5 +55,20 @@ public sealed class DepositTests
         Assert.Equal(1_000m, fixture.Account.Balance);
         Assert.Empty(fixture.Transactions.Transactions);
     }
-}
 
+    [Fact]
+    public async Task Deposit_UnknownAccount_Throws()
+    {
+        var fixture = new BankingServiceFixture();
+
+        await Assert.ThrowsAsync<BankAccountNotFoundException>(() =>
+            fixture.TransactionService.DepositAsync(
+                "ACC-20260917-9999",
+                100m,
+                CancellationToken.None));
+
+        Assert.Equal(1_000m, fixture.Account.Balance);
+        Assert.Empty(fixture.Transactions.Transactions);
+        Assert.Equal(0, fixture.UnitOfWork.SaveCount);
+    }
+}
