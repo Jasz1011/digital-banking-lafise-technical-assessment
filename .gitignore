@@ -2,6 +2,8 @@
 **/bin/
 **/obj/
 .nuget/
+**/node_modules/
+web/dist/
 
 # IDE and user settings
 .vs/
@@ -30,6 +32,7 @@ appsettings.Local.json
 appsettings.*.local.json
 .env
 .env.*
+!.env.example
 secrets.json
 
 # Temporary files
@@ -39,4 +42,3 @@ secrets.json
 ~$*
 .DS_Store
 Thumbs.db
-
