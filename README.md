@@ -21,4 +21,5 @@ Documentación complementaria:
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Ejemplos de API](docs/API_EXAMPLES.md)
 - [Checklist de requisitos](docs/REQUIREMENTS_CHECKLIST.md)
+- [Estrategia de testing](docs/TESTING.md)
 

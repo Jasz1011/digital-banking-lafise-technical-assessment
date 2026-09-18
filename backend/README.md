@@ -83,7 +83,7 @@ dotnet --version
 ## Instalación
 
 ```bash
-git clone <URL-del-repositorio>
+git clone https://github.com/Jasz1011/digital-banking-lafise-technical-assessment.git
 cd digital-banking-lafise-technical-assessment/backend
 dotnet tool restore
 dotnet restore Banking.sln
