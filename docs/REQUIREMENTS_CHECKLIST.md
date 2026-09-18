@@ -7,7 +7,7 @@ Verificación realizada contra las tres páginas del PDF **Prueba Técnica: Prog
 | Proyecto desde cero en .NET 10 | ✅ Verificado | Todos los proyectos usan `net10.0`; `global.json` fija el SDK compatible | `global.json`, `backend/**/*.csproj` | Build y tests ejecutados con .NET 10 |
 | ASP.NET Core Web API | ✅ Verificado | API con controllers y rutas REST | `Banking.Api/Program.cs`, `Controllers/` | Build y smoke test HTTP |
 | Clean Architecture / N-Tier | ✅ Verificado | Cuatro capas con referencias dirigidas | `Banking.sln`, proyectos `Banking.*` | Build completo sin ciclos |
-| Repositorio Git y README de ejecución | ✅ Verificado | Repositorio publicado con Quick Start y documentación por componente | `README.md`, `backend/README.md`, `web/README.md` | Flujo de instalación y ejecución documentado |
+| Repositorio Git y README de ejecución | ✅ Verificado | Repositorio publicado con Quick Start y documentación por componente | `README.md`, `backend/README.md`, `web/README.md`, `mobile/README.md` | Flujo de instalación y ejecución documentado |
 | Perfil con nombre completo | ✅ Verificado | `Customer.FullName` y DTO de creación | `Customer.cs`, `CreateCustomerRequest.cs` | Unit e integration tests de vacío, espacios, Unicode y longitud |
 | Perfil con fecha de nacimiento | ✅ Verificado | `DateOnly BirthDate` | `Customer.cs` | Tests de fecha faltante y futura |
 | Perfil con sexo/género | ✅ Verificado | `Customer.Gender` obligatorio y longitud máxima 50 | `Customer.cs`, DTOs | Unit e integration tests |
@@ -49,13 +49,17 @@ Verificación realizada contra las tres páginas del PDF **Prueba Técnica: Prog
 | Web como extensión voluntaria | ✅ Verificado | React consume exclusivamente el contrato público del backend | `web/src/`, `web/README.md` | Flujo manual completo, lint y build |
 | Web no duplica reglas financieras | ✅ Verificado | No genera cuenta, no calcula saldo ni autoriza retiros | `web/src/api/`, hooks y features | Revisión de flujo |
 | Web responsive | ✅ Verificado | Navegación y composiciones adaptativas, dialogs/sheets | `web/src/`, `web/src/styles/index.css` | Validación manual desktop/mobile |
-| Sin funcionalidades bancarias ficticias operables | ✅ Verificado | No expone transferencias, tarjetas, préstamos, ACH ni remesas | Web completa | Inventario de rutas y acciones |
-| Mobile | ⏳ Futuro | Carpeta reservada; no forma parte del alcance actual | `mobile/README.md` | Sin implementación |
+| Sin funcionalidades bancarias ficticias operables | ✅ Verificado | No expone transferencias, tarjetas, préstamos, ACH ni remesas | Web y Mobile | Inventario de rutas y acciones |
+| Mobile como extensión voluntaria | ✅ Verificado | Flutter consume exclusivamente los seis endpoints públicos | `mobile/lib/`, `mobile/README.md` | `flutter analyze`, 19 tests y APK debug |
+| Mobile no duplica reglas financieras | ✅ Verificado | Banking.Api genera cuenta, determina saldo, valida fondos y persiste movimientos | repositorios y providers móviles | Revisión de flujo y tests de repositorios |
+| Mobile responsive y accesible | ✅ Verificado | Layouts acotados, scroll, targets táctiles y Semantics | presentation y core widgets | Análisis estático y widget test |
 | Restore | ✅ Verificado | Paquetes restaurados | NuGet y package manifests | `dotnet restore`, `npm install` |
 | Build frontend | ✅ Verificado | TypeScript + Vite | `web/` | `npm run build` correcto el 18-09-2026 |
 | Lint frontend | ✅ Verificado | ESLint sin warnings permitidos | `web/` | `npm run lint` correcto el 18-09-2026 |
+| Análisis y tests Mobile | ✅ Verificado | Flutter analyzer y pruebas de parser, formatos, validación, repositorios y widget | `mobile/test/` | 16 correctas el 18-09-2026 |
+| Build Android | ✅ Verificado | APK de depuración | `mobile/android/` | `flutter build apk --debug` correcto el 18-09-2026 |
 | Tests backend | ✅ Verificado | Suite xUnit unit + integration | `Banking.UnitTests`, `Banking.IntegrationTests` | 41 correctas, 0 fallidas, 0 omitidas el 18-09-2026 |
 
 ## Estado de entrega
 
-El repositorio público contiene el backend solicitado, la extensión Web funcional, documentación de ejecución y evidencia de validación. Mobile permanece como fase futura y no es necesario para cumplir la prueba técnica.
+El repositorio contiene el backend solicitado y las extensiones Web y Mobile funcionales, con documentación de ejecución y evidencia de validación. Los clientes adicionales no alteran el cumplimiento ni las reglas de la prueba técnica backend.

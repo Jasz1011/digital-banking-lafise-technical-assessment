@@ -16,18 +16,20 @@ Banking.Api ───────→ Banking.Application ←────── B
 ## Flujo de una solicitud
 
 ```text
-React Web
-    ↓ HTTP/JSON
+React Web ─┐
+           ├─ HTTP/JSON
+Flutter ───┘
+           ↓
 Request → Controller → Application Service → Repository → EF Core → SQLite
                                                 ↓
 Response DTO ← Controller ← Application Service
     ↓
-React Web
+React Web / Flutter
 ```
 
 Los controllers reciben DTOs, delegan y devuelven códigos HTTP. Las reglas sobre saldo, montos y fondos permanecen en dominio/aplicación.
 
-La web funciona como cliente del contrato HTTP. No accede a EF Core, no calcula saldos, no genera números de cuenta y no replica la validación definitiva de fondos.
+La web y la aplicación Flutter funcionan como clientes del contrato HTTP. No acceden a EF Core, no calculan saldos, no generan números de cuenta y no replican la validación definitiva de fondos.
 
 ## Persistencia e integridad
 
@@ -41,7 +43,7 @@ La unidad de trabajo abre una transacción para cada depósito o retiro. El sald
 
 Los servicios lanzan excepciones específicas. `GlobalExceptionHandler`, basado en `IExceptionHandler`, genera `ProblemDetails` seguros y consistentes sin `try/catch` repetidos en controllers.
 
-La web normaliza esas respuestas y las presenta como mensajes de contexto. El rechazo de fondos insuficientes no altera el saldo ni agrega una transacción.
+Los clientes normalizan esas respuestas y las presentan como mensajes de contexto. El rechazo de fondos insuficientes no altera el saldo ni agrega una transacción.
 
 ## Integration testing
 
@@ -65,6 +67,14 @@ SQLite temporal
 
 La aplicación React ya consume `Banking.Api` mediante HTTP/JSON y demuestra el flujo completo solicitado: clientes, cuentas, saldo, depósitos, retiros e historial.
 
-`mobile/` permanece como fase futura prevista en Flutter. Si se implementa, deberá consumir los mismos contratos y mantener las reglas financieras exclusivamente en el backend.
+La aplicación Flutter consume los mismos seis endpoints mediante un cliente Dio central. Sus repositorios mapean los contratos y Riverpod administra consultas de saldo e historial. Después de una operación, invalida ambas consultas para volver a obtener la verdad desde Banking.Api.
+
+```text
+Flutter Presentation / Riverpod
+              ↓
+Repository interfaces
+              ↓
+Dio implementations → Banking.Api
+```
 
 Transferencias, autenticación, tarjetas, múltiples monedas y otros servicios futuros deben agregarse como nuevos casos de uso del backend antes de exponerse en clientes.

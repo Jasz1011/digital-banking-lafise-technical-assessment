@@ -3,18 +3,20 @@
 
 Proyecto desarrollado como solución a una prueba técnica para Programador Backend. No representa un sistema oficial, arquitectura interna ni producto de producción de Banco LAFISE.
 
-El backend corresponde al alcance solicitado en la prueba técnica. La web es una extensión voluntaria que demuestra el consumo real de la API sin duplicar reglas financieras.
+El backend corresponde al alcance solicitado en la prueba técnica. La web y la aplicación móvil son extensiones voluntarias que demuestran el consumo real de la API sin duplicar reglas financieras.
 
 ## Estructura
 
 - `backend/`: API en .NET 10 con ASP.NET Core, Entity Framework Core y SQLite.
 - `web/`: cliente responsive en React y TypeScript para operar el alcance de la API.
-- `mobile/`: fase futura prevista en Flutter y Dart.
+- `mobile/`: cliente móvil Flutter para Android e iOS.
 - `docs/`: arquitectura, ejemplos de consumo, testing y trazabilidad de requisitos.
 
 ```text
-Web
- ↓ HTTP/JSON
+React Web ─┐
+           ├─ HTTP/JSON
+Flutter ───┘
+           ↓
 Banking.Api
  ↓
 Banking.Application
@@ -26,7 +28,7 @@ Banking.Infrastructure
 SQLite
 ```
 
-La web no genera números de cuenta, no calcula saldos y no decide si existen fondos suficientes. Esas reglas permanecen centralizadas en el backend.
+Los clientes no generan números de cuenta, no calculan saldos y no deciden si existen fondos suficientes. Esas reglas permanecen centralizadas en el backend.
 
 ## Quick start
 
@@ -35,6 +37,7 @@ La web no genera números de cuenta, no calcula saldos y no decide si existen fo
 - .NET SDK 10
 - Node.js 24 o una versión compatible con Vite 8
 - npm
+- Flutter 3.38.5 y Dart 3.10.4 para la aplicación móvil
 - Git
 
 ### 1. Clonar
@@ -93,6 +96,18 @@ http://127.0.0.1:5173
 
 También está permitido `http://localhost:5173` por la política CORS de desarrollo.
 
+### 4. Mobile
+
+Con Banking.Api en ejecución, desde la raíz del repositorio:
+
+```powershell
+cd mobile
+flutter pub get
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5097
+```
+
+`10.0.2.2` corresponde al Android Emulator. Consulta [mobile/README.md](mobile/README.md) para iOS Simulator y dispositivos físicos.
+
 ## Flujo funcional disponible
 
 La interfaz permite recorrer el alcance del backend:
@@ -120,6 +135,15 @@ npm run lint
 npm run build
 ```
 
+Mobile:
+
+```powershell
+cd mobile
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
 Backend:
 
 ```powershell
@@ -142,6 +166,7 @@ La suite contiene 33 unit tests y 8 integration tests.
 
 - [Backend](backend/README.md)
 - [Web](web/README.md)
+- [Mobile](mobile/README.md)
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Ejemplos de API](docs/API_EXAMPLES.md)
 - [Checklist de requisitos](docs/REQUIREMENTS_CHECKLIST.md)
