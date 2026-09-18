@@ -2,7 +2,6 @@ import { ArrowDownToLine, ArrowLeft, ArrowUpFromLine, RefreshCw } from 'lucide-r
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { parseApiError } from '../api/errors'
-import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
 import { StatusPanel } from '../components/ui/StatusPanel'
 import { BalanceCard } from '../features/accounts/BalanceCard'
@@ -55,69 +54,57 @@ export function AccountDetailPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-10 sm:px-7 sm:py-14 lg:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <Link
-            to="/cuentas/buscar"
-            className="inline-flex items-center gap-2 text-xs font-medium text-[var(--text-tertiary)] transition hover:text-[var(--brand-primary-dark)]"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            Consultar otra cuenta
-          </Link>
-          <p className="mt-5 text-sm font-medium text-[var(--brand-primary)]">Cuenta de ahorro</p>
-          <h1 className="mt-1 text-xl font-semibold tracking-[0.025em] text-[var(--text-primary)] sm:text-2xl">
-            {balanceQuery.data.accountNumber}
-          </h1>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          isLoading={balanceQuery.isFetching}
-          onClick={() => balanceQuery.refetch()}
+      <div className="flex flex-col items-center gap-1">
+        <Link
+          to="/cuentas/buscar"
+          className="inline-flex items-center gap-2 text-xs font-medium text-[var(--text-tertiary)] transition hover:text-[var(--brand-primary-dark)]"
         >
-          <RefreshCw aria-hidden="true" className="size-4" />
-          Actualizar
-        </Button>
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Volver
+        </Link>
+        <p className="mt-4 text-sm font-medium text-[var(--text-secondary)]">Cuenta de ahorro</p>
       </div>
 
-      <div className="mt-7">
+      <div className="mt-6 md:mt-8">
         <BalanceCard accountNumber={balanceQuery.data.accountNumber} balance={balanceQuery.data.balance} />
       </div>
 
-      <section aria-labelledby="account-actions-title" className="py-9 text-center">
+      <section aria-labelledby="account-actions-title" className="mt-8 flex justify-center gap-4 sm:gap-6">
         <h2 id="account-actions-title" className="sr-only">Acciones de cuenta</h2>
-        <div className="flex justify-center gap-10 sm:gap-16">
-          <button
-            type="button"
-            className="group grid justify-items-center gap-3 text-sm font-medium text-[var(--text-primary)]"
-            onClick={() => setMovement('deposit')}
-          >
-            <span className="grid size-16 place-items-center rounded-full bg-[var(--brand-mint)] text-[var(--brand-primary-dark)] shadow-[var(--shadow-sm)] transition group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-card)]">
-              <ArrowDownToLine aria-hidden="true" className="size-6" />
-            </span>
-            Depositar
-          </button>
-          <button
-            type="button"
-            className="group grid justify-items-center gap-3 text-sm font-medium text-[var(--text-primary)]"
-            onClick={() => setMovement('withdrawal')}
-          >
-            <span className="grid size-16 place-items-center rounded-full bg-[var(--cyan-soft)] text-[var(--brand-blue)] shadow-[var(--shadow-sm)] transition group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-card)]">
-              <ArrowUpFromLine aria-hidden="true" className="size-6" />
-            </span>
-            Retirar
-          </button>
-        </div>
+        <button
+          type="button"
+          className="flex h-14 min-w-[9rem] items-center justify-center gap-2.5 rounded-full bg-[var(--brand-mint)] px-6 text-sm font-semibold text-[var(--brand-primary-dark)] transition hover:-translate-y-0.5 hover:bg-[#dcf4e6] hover:shadow-[0_8px_20px_rgba(0,157,78,0.12)] active:translate-y-0"
+          onClick={() => setMovement('deposit')}
+        >
+          <ArrowDownToLine aria-hidden="true" className="size-5" />
+          Depositar
+        </button>
+        <button
+          type="button"
+          className="flex h-14 min-w-[9rem] items-center justify-center gap-2.5 rounded-full bg-[var(--cyan-soft)] px-6 text-sm font-semibold text-[var(--brand-blue)] transition hover:-translate-y-0.5 hover:bg-[#dcf2f8] hover:shadow-[0_8px_20px_rgba(49,196,223,0.15)] active:translate-y-0"
+          onClick={() => setMovement('withdrawal')}
+        >
+          <ArrowUpFromLine aria-hidden="true" className="size-5" />
+          Retirar
+        </button>
       </section>
 
-      <section aria-labelledby="transactions-title" className="rounded-[var(--radius-xl)] bg-white px-5 py-6 shadow-[var(--shadow-card)] sm:px-8 sm:py-8">
-        <div className="mb-3 flex items-end justify-between gap-4">
+      <section aria-labelledby="transactions-title" className="mt-12 rounded-[1.25rem] bg-white px-5 py-6 shadow-sm ring-1 ring-[var(--border-subtle)] sm:px-8 sm:py-8">
+        <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-[var(--brand-primary)]">Actividad</p>
-            <h2 id="transactions-title" className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
+            <h2 id="transactions-title" className="text-lg font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
               Movimientos recientes
             </h2>
           </div>
+          <button
+            type="button"
+            className="inline-flex size-9 items-center justify-center rounded-full text-[var(--text-tertiary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--brand-primary-dark)]"
+            disabled={balanceQuery.isFetching}
+            onClick={() => balanceQuery.refetch()}
+            aria-label="Actualizar movimientos"
+          >
+            <RefreshCw aria-hidden="true" className={`size-4 ${balanceQuery.isFetching ? 'animate-spin' : ''}`} />
+          </button>
         </div>
         <TransactionHistory accountNumber={accountNumber} />
       </section>

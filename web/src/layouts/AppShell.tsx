@@ -17,7 +17,7 @@ function DesktopNavigation() {
   const { pathname } = useLocation()
 
   return (
-    <nav aria-label="Navegación principal" className="hidden items-center gap-8 md:flex">
+    <nav aria-label="Navegación principal" className="hidden items-center gap-9 md:flex">
       {navigation.map((item) => {
         const isActive = isCurrentSection(pathname, item.section)
         return (
@@ -26,10 +26,10 @@ function DesktopNavigation() {
             to={item.to}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'relative py-3 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-center after:rounded-full after:bg-[var(--brand-primary)] after:transition-transform',
+              'relative py-2 text-[0.9rem] font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-[3px] after:origin-center after:rounded-full after:bg-[var(--brand-primary)] after:transition-transform',
               isActive
-                ? 'text-[var(--brand-primary-dark)] after:scale-x-100'
-                : 'text-[var(--text-secondary)] after:scale-x-0 hover:text-[var(--brand-primary-dark)]',
+                ? 'text-[var(--brand-primary-deep)] after:scale-x-100'
+                : 'text-[var(--text-secondary)] after:scale-x-0 hover:text-[var(--brand-primary)]',
             )}
           >
             {item.label}
@@ -46,7 +46,7 @@ function MobileNavigation() {
   return (
     <nav
       aria-label="Navegación móvil"
-      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[var(--border)] bg-white/96 px-3 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_rgba(18,74,56,0.08)] backdrop-blur-xl md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-[var(--border-subtle)] bg-white/98 px-2 pb-[calc(env(safe-area-inset-bottom)+0.25rem)] pt-1 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl md:hidden"
     >
       {navigation.map((item) => {
         const Icon = item.icon
@@ -57,13 +57,13 @@ function MobileNavigation() {
             to={item.to}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex min-h-16 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[0.68rem] font-medium transition-colors',
+              'group flex min-h-14 flex-1 flex-col items-center justify-center gap-1 rounded-2xl text-[0.65rem] font-semibold transition-all',
               isActive
                 ? 'text-[var(--brand-primary)]'
-                : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]',
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--surface-soft)]',
             )}
           >
-            <Icon aria-hidden="true" className="size-5" strokeWidth={1.9} />
+            <Icon aria-hidden="true" className={cn("size-6 transition-transform", isActive ? "scale-110" : "group-hover:scale-105")} strokeWidth={isActive ? 2.5 : 2} />
             {item.label}
           </Link>
         )

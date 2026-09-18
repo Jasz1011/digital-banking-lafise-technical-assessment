@@ -34,45 +34,56 @@ export function AccountSearch({ autoFocus = false }: AccountSearchProps) {
   })
 
   return (
-    <form onSubmit={submit} className="grid gap-3" noValidate>
-      <label htmlFor="account-search" className="text-sm font-medium text-[var(--text-primary)]">
-        Número de cuenta
-      </label>
-      <div className="relative flex flex-col gap-3 sm:flex-row">
-        <Search
-          aria-hidden="true"
-          className="pointer-events-none absolute top-4 left-4 size-5 text-[var(--text-tertiary)]"
-        />
+    <form onSubmit={submit} className="relative w-full" noValidate>
+      <div className="group relative flex flex-col rounded-[2rem] bg-white p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-[var(--border-subtle)] transition-all hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] focus-within:shadow-[0_20px_50px_rgba(0,157,78,0.12)] focus-within:ring-[var(--brand-secondary)] sm:flex-row sm:items-center">
+        <div className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 text-[var(--brand-primary)] sm:block">
+          <Search aria-hidden="true" className="size-7 opacity-50 transition-opacity group-focus-within:opacity-100" strokeWidth={2} />
+        </div>
         <input
           id="account-search"
           autoFocus={autoFocus}
           autoComplete="off"
           spellCheck="false"
-          placeholder="ACC-YYYYMMDD-XXXX"
+          placeholder="Ej: ACC-YYYYMMDD-XXXX"
           aria-invalid={Boolean(errors.accountNumber)}
-          aria-describedby={errors.accountNumber ? 'account-search-error' : 'account-search-hint'}
-          className="min-h-13 min-w-0 flex-1 rounded-2xl border border-[var(--border)] bg-white pr-4 pl-12 font-medium tracking-[0.035em] text-[var(--text-primary)] uppercase transition placeholder:font-normal placeholder:tracking-normal placeholder:text-[var(--text-placeholder)] hover:border-[var(--border-strong)] focus:border-[var(--brand-secondary)] focus:ring-4 focus:ring-[var(--focus-ring)] focus:outline-none"
+          className="h-16 w-full rounded-2xl bg-transparent px-6 text-lg font-medium tracking-[0.04em] text-[var(--text-primary)] uppercase transition placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-[var(--text-placeholder)] focus:outline-none sm:h-20 sm:px-16 sm:text-xl"
           {...register('accountNumber')}
         />
-        <Button type="submit" size="lg" isLoading={lookup.isPending} className="shrink-0 sm:min-w-36">
-          {lookup.isPending ? 'Buscando' : 'Ver cuenta'}
-          {!lookup.isPending && <ArrowRight aria-hidden="true" className="size-4" />}
+        <Button type="submit" size="lg" isLoading={lookup.isPending} className="m-2 shrink-0 rounded-[1rem] sm:m-0 sm:mr-3 sm:min-w-44 sm:min-h-14">
+          {lookup.isPending ? 'Buscando...' : 'Consultar cuenta'}
+          {!lookup.isPending && <ArrowRight aria-hidden="true" className="size-5" />}
         </Button>
       </div>
-      {errors.accountNumber ? (
-        <p id="account-search-error" className="text-xs text-[var(--danger)]">
-          {errors.accountNumber.message}
-        </p>
-      ) : (
-        <p id="account-search-hint" className="text-xs text-[var(--text-tertiary)]">
-          Ejemplo: ACC-YYYYMMDD-XXXX
-        </p>
-      )}
-      {apiError && (
-        <div role="alert" className="rounded-2xl bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]">
-          <strong className="font-semibold">{apiError.title}.</strong> {apiError.detail}
-        </div>
-      )}
+      
+      <div className="mt-4 flex flex-col px-4 sm:px-6">
+        {errors.accountNumber ? (
+          <p id="account-search-error" className="flex items-center gap-2 text-sm font-medium text-[var(--danger)]">
+             <span className="inline-block size-1.5 rounded-full bg-[var(--danger)]"></span>
+            {errors.accountNumber.message}
+          </p>
+        ) : apiError?.status === 404 ? (
+          <div className="mt-2 rounded-2xl bg-[var(--surface-muted)] p-5 text-center ring-1 ring-[var(--border-subtle)]">
+            <span className="mx-auto grid size-12 place-items-center rounded-full bg-white text-[var(--text-tertiary)] shadow-sm">
+              <Search aria-hidden="true" className="size-5" />
+            </span>
+            <strong className="mt-3 block text-[0.95rem] font-semibold text-[var(--text-primary)]">
+              No encontramos esa cuenta
+            </strong>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">
+              Verifica el número y sus guiones e inténtalo nuevamente.
+            </p>
+          </div>
+        ) : apiError ? (
+          <p role="alert" className="flex items-center gap-2 text-sm font-medium text-[var(--danger)]">
+             <span className="inline-block size-1.5 rounded-full bg-[var(--danger)]"></span>
+             <strong className="font-semibold">{apiError.title}.</strong> {apiError.detail}
+          </p>
+        ) : (
+          <p id="account-search-hint" className="text-sm font-medium text-[var(--text-tertiary)] opacity-80">
+            Ingresa el formato exacto incluyendo los guiones.
+          </p>
+        )}
+      </div>
     </form>
   )
 }

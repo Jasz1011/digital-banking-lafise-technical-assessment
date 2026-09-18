@@ -12,8 +12,8 @@ export function ProductPreview() {
               <Eye className="size-3 text-white/75" />
             </div>
             <p className="mt-4 text-[0.55rem] text-white/70">Saldo disponible</p>
-            <p className="financial-number mt-1 text-xl font-semibold text-white">C$ ••••••</p>
-            <p className="mt-3 text-[0.5rem] tracking-[0.09em] text-white/65">•••• ••••</p>
+            <p className="financial-number mt-1 text-[1.4rem] font-bold tracking-tight text-white">C$ 24,500.00</p>
+            <p className="mt-2 text-[0.55rem] tracking-[0.1em] text-white/80">0124 5432 9876</p>
           </div>
 
           <div className="-mt-5 flex justify-center gap-5">
@@ -37,15 +37,22 @@ export function ProductPreview() {
                 <span className="bg-[var(--success-soft)] text-[var(--success)]">
                   <ArrowDownLeft className="size-3" />
                 </span>
-                <div><b>Depósito</b><i>Hoy</i></div>
-                <em>+ C$</em>
+                <div><b>Depósito</b><i>Hoy, 10:42 AM</i></div>
+                <em className="text-[var(--success)] font-medium">+ C$ 1,200.00</em>
               </div>
               <div className="product-movement">
                 <span className="bg-[var(--cyan-soft)] text-[var(--brand-blue)]">
                   <ArrowUpRight className="size-3" />
                 </span>
-                <div><b>Retiro</b><i>Ayer</i></div>
-                <em>− C$</em>
+                <div><b>Retiro</b><i>Ayer, 04:15 PM</i></div>
+                <em className="text-[var(--text-primary)] font-medium">− C$ 450.00</em>
+              </div>
+              <div className="product-movement opacity-80">
+                <span className="bg-[var(--success-soft)] text-[var(--success)]">
+                  <ArrowDownLeft className="size-3" />
+                </span>
+                <div><b>Depósito</b><i>15 Sep</i></div>
+                <em className="text-[var(--success)] font-medium">+ C$ 120.00</em>
               </div>
             </div>
           </div>

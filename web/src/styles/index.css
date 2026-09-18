@@ -121,8 +121,10 @@ a { cursor: pointer; }
 }
 
 .product-orbit {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 32rem;
   display: grid;
   place-items: center;
 }
@@ -248,6 +250,12 @@ a { cursor: pointer; }
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 18px 45px rgba(18, 74, 56, 0.12);
   backdrop-filter: blur(12px);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .product-float > span {
@@ -282,6 +290,7 @@ a { cursor: pointer; }
 .product-float-right {
   right: max(0%, calc(50% - 15rem));
   bottom: 22%;
+  animation-delay: -3s;
 }
 
 .quick-card {
@@ -330,8 +339,10 @@ a { cursor: pointer; }
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.24), transparent 13rem),
-    linear-gradient(135deg, var(--brand-primary-dark), var(--brand-primary) 48%, var(--brand-secondary) 100%);
+    radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.15), transparent 40%),
+    radial-gradient(circle at 10% 90%, rgba(49, 196, 223, 0.3), transparent 60%),
+    linear-gradient(135deg, var(--brand-primary-deep) 0%, var(--brand-primary) 60%, var(--brand-secondary) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .financial-card::before,
@@ -339,27 +350,26 @@ a { cursor: pointer; }
   position: absolute;
   z-index: -1;
   content: "";
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
 }
 
 .financial-card::before {
-  right: -7rem;
-  bottom: -8rem;
-  width: 22rem;
-  height: 16rem;
-  transform: rotate(-18deg);
+  right: -5rem;
+  top: -10rem;
+  width: 26rem;
+  height: 26rem;
   box-shadow:
-    0 0 0 2.5rem rgba(255, 255, 255, 0.045),
-    0 0 0 5rem rgba(255, 255, 255, 0.03);
+    inset 0 0 0 2rem rgba(255, 255, 255, 0.02),
+    0 0 0 4rem rgba(255, 255, 255, 0.02);
 }
 
 .financial-card::after {
-  top: -7rem;
-  left: 42%;
-  width: 12rem;
-  height: 12rem;
-  background: rgba(49, 196, 223, 0.15);
+  bottom: -6rem;
+  left: -4rem;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .skeleton {
@@ -433,9 +443,9 @@ a { cursor: pointer; }
 }
 
 @media (max-width: 639px) {
-  .product-orbit { transform: scale(0.86); }
-  .product-float-left { left: calc(50% - 12.8rem); }
-  .product-float-right { right: calc(50% - 13rem); }
+  .product-orbit { transform: scale(0.8); }
+  .product-float-left { left: calc(50% - 10.5rem); z-index: 10; }
+  .product-float-right { right: calc(50% - 11rem); z-index: 10; }
 }
 
 @media (prefers-reduced-motion: reduce) {

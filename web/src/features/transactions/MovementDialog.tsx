@@ -151,25 +151,45 @@ export function MovementDialog({
               )}
             </div>
 
-            {apiError && (
+            {apiError && apiError.status === 400 ? (
+              <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-soft)] p-6 text-center shadow-sm">
+                <span className="mx-auto grid size-12 place-items-center rounded-full bg-white text-[var(--danger)] shadow-sm">
+                  <span className="flex size-6 items-center justify-center rounded-full border-2 border-current font-bold">!</span>
+                </span>
+                <strong className="mt-4 block text-[1.05rem] font-semibold tracking-tight text-[var(--text-primary)]">
+                  No tienes fondos suficientes
+                </strong>
+                <p className="mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+                  Revisa el monto e inténtalo nuevamente.<br />
+                  Saldo actual: <strong className="font-semibold">{formatCurrency(balance)}</strong>
+                </p>
+                <div className="mt-5">
+                  <Button variant="secondary" onClick={() => mutation.reset()} className="w-full">
+                    Modificar monto
+                  </Button>
+                </div>
+              </div>
+            ) : apiError ? (
               <div role="alert" className="rounded-2xl bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]">
                 <strong className="block font-semibold">{apiError.title}</strong>
                 <span className="mt-1 block leading-5">{apiError.detail}</span>
               </div>
-            )}
+            ) : null}
 
-            <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-subtle)] pt-5 sm:flex-row sm:justify-end">
-              <Dialog.Close asChild>
-                <Button variant="ghost">Cancelar</Button>
-              </Dialog.Close>
-              <Button
-                type="submit"
-                variant={kind === 'withdrawal' ? 'danger' : 'primary'}
-                isLoading={mutation.isPending}
-              >
-                {mutation.isPending ? content.pending : content.action}
-              </Button>
-            </div>
+            {(!apiError || apiError.status !== 400) && (
+              <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-subtle)] pt-5 sm:flex-row sm:justify-end">
+                <Dialog.Close asChild>
+                  <Button variant="ghost">Cancelar</Button>
+                </Dialog.Close>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={mutation.isPending}
+                >
+                  {mutation.isPending ? content.pending : content.action}
+                </Button>
+              </div>
+            )}
           </form>
         </Dialog.Content>
       </Dialog.Portal>
