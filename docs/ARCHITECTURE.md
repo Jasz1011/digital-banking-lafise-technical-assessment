@@ -29,6 +29,17 @@ React Web / Flutter
 
 Los controllers reciben DTOs, delegan y devuelven códigos HTTP. Las reglas sobre saldo, montos y fondos permanecen en dominio/aplicación.
 
+## Organización de controllers
+
+Los endpoints se agrupan por **recurso y responsabilidad**, no en un único controller monolítico ni en un controller por endpoint:
+
+- `CustomersController` concentra las operaciones HTTP relacionadas con clientes y depende únicamente de `ICustomerService`.
+- `AccountsController` concentra cuentas, saldo y movimientos asociados a una cuenta y delega en `IBankAccountService` e `ITransactionService`.
+
+Esta separación mantiene alta cohesión y aplica el principio de responsabilidad única (SRP). También evita mezclar en una misma clase responsabilidades de clientes, cuentas y movimientos.
+
+Los controllers permanecen deliberadamente delgados: no usan `BankingDbContext`, no acceden directamente a EF Core, no generan números de cuenta y no implementan reglas financieras. Su responsabilidad es traducir HTTP hacia servicios de aplicación y devolver DTOs/status codes.
+
 La web y la aplicación Flutter funcionan como clientes del contrato HTTP. No acceden a EF Core, no calculan saldos, no generan números de cuenta y no replican la validación definitiva de fondos.
 
 ## Persistencia e integridad
@@ -38,6 +49,17 @@ La web y la aplicación Flutter funcionan como clientes del contrato HTTP. No ac
 La unidad de trabajo abre una transacción para cada depósito o retiro. El saldo y el movimiento se confirman juntos; cualquier error revierte ambos cambios. `BalanceAfterTransaction` se persiste para conservar la evidencia histórica.
 
 `BankAccount.Version` funciona como token de concurrencia optimista. Una actualización concurrente que use una versión obsoleta no sobrescribe el saldo y se traduce a `409 Conflict`.
+
+## Decisiones de diseño y ownership de reglas
+
+- **`decimal` para dinero:** balance, ingresos y montos se representan con `decimal` en el backend para evitar errores binarios de punto flotante en reglas financieras.
+- **DTOs en las fronteras:** las entidades de dominio/persistencia no se exponen directamente por HTTP.
+- **Repository + Unit of Work:** los repositorios encapsulan persistencia y la unidad de trabajo coordina el commit transaccional.
+- **Atomicidad:** depósito/retiro y creación del movimiento se confirman como una sola operación de base de datos.
+- **`BalanceAfterTransaction`:** se persiste en cada movimiento para conservar el estado histórico exacto en el momento de la operación, sin reconstruirlo a partir del saldo actual.
+- **Concurrencia optimista:** `BankAccount.Version` permite detectar escrituras simultáneas obsoletas; el conflicto se traduce a `409 Conflict`.
+- **Unicidad por capas:** el generador evita repeticiones básicas en proceso, el servicio comprueba colisiones y SQLite aplica el índice `UNIQUE` como garantía final.
+- **Backend como fuente de verdad:** Web y Mobile pueden validar formato para UX, pero Banking.Api decide existencia, saldo, fondos suficientes, número de cuenta y persistencia.
 
 ## Errores
 
@@ -76,5 +98,11 @@ Repository interfaces
               ↓
 Dio implementations → Banking.Api
 ```
+
+### Fuente de verdad en clientes
+
+Tras un depósito o retiro, ninguno de los clientes calcula el nuevo saldo de forma autoritativa. Web invalida sus queries de TanStack Query y Mobile invalida los providers de saldo e historial; ambos vuelven a consultar `Banking.Api`.
+
+La referencia de transacción puede abreviarse visualmente, pero el `TransactionId` completo se conserva en el modelo y es el valor que se copia al portapapeles.
 
 Transferencias, autenticación, tarjetas, múltiples monedas y otros servicios futuros deben agregarse como nuevos casos de uso del backend antes de exponerse en clientes.

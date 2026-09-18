@@ -39,6 +39,17 @@ SQLite
 
 Los controllers no conocen `BankingDbContext` ni realizan cálculos de saldo.
 
+### Organización de controllers
+
+Los controllers se separan por recurso para mantener cohesión y responsabilidad única:
+
+- `CustomersController` recibe las operaciones HTTP de clientes y delega en `ICustomerService`.
+- `AccountsController` agrupa creación/consulta de cuenta y movimientos asociados, delegando en `IBankAccountService` e `ITransactionService`.
+
+No se usa un único `BankingController` porque mezclaría responsabilidades distintas y haría crecer una clase monolítica. Tampoco se crea un controller por cada endpoint: la agrupación por recurso mantiene un equilibrio entre cohesión, mantenibilidad y claridad.
+
+La lógica de negocio permanece fuera de los controllers. Ellos convierten HTTP en llamadas a servicios de aplicación y devuelven DTOs/status codes.
+
 ## Funcionalidades
 
 - Crear perfiles de clientes.

@@ -31,21 +31,31 @@ Skipped: 0
 
 ## Unit Tests
 
-Los unit tests están en `backend/tests/Banking.UnitTests`. Usan xUnit, repositorios en memoria, `InMemoryUnitOfWork`, un generador controlado y `MutableTimeProvider`. No levantan ASP.NET Core ni escriben en SQLite.
+Los unit tests están en `backend/tests/Banking.UnitTests`. Usan xUnit, repositorios en memoria, `InMemoryUnitOfWork`, generadores controlados y `MutableTimeProvider`. No levantan ASP.NET Core, no ejecutan HTTP y no escriben en SQLite.
 
-Cubren:
+Su objetivo es verificar reglas y casos de uso de forma rápida, determinista y aislada.
 
-- formato y unicidad básica de `AccountNumberGenerator`;
-- validaciones de cliente;
-- creación de cuenta y colisiones;
-- depósitos válidos e inválidos;
-- retiros válidos, exactos, inválidos y con fondos insuficientes;
-- cuenta inexistente;
-- historial vacío y cronológico;
-- `BalanceAfterTransaction`.
+| Grupo | Tests | Qué valida |
+|---|---:|---|
+| `AccountNumberGeneratorTests` | 6 | prefijo `ACC-`, fecha actual, longitud 17, cuatro dígitos finales, formato completo y unicidad básica en 100 generaciones |
+| `CustomerValidationTests` | 8 | nombre vacío/espacios, caracteres Unicode, fecha futura/faltante, ingreso negativo/cero y género obligatorio |
+| `BankAccountServiceTests` | 6 | cliente existente/desconocido, generación del número, saldo inicial válido/cero y reintento ante colisión |
+| `BankAccountValidationTests` | 1 | rechazo de saldo inicial negativo en dominio |
+| `DepositTests` | 4 | depósito válido, monto cero, negativo y cuenta inexistente |
+| `WithdrawalTests` | 6 | retiro válido, retiro del saldo exacto, fondos insuficientes, monto cero, negativo y cuenta inexistente |
+| `TransactionHistoryTests` | 2 | historial vacío y orden cronológico con `BalanceAfterTransaction` |
+| **Total** | **33** | |
+
+### Qué demuestran los unit tests
+
+- Un depósito válido aumenta el saldo, crea un movimiento `Deposit`, conserva monto y `BalanceAfterTransaction` y solicita un único guardado.
+- Un retiro válido disminuye el saldo y un retiro por el saldo exacto puede dejar la cuenta en cero.
+- Fondos insuficientes lanzan `InsufficientFundsException` antes de persistir: el saldo queda intacto, no se agrega movimiento y `SaveCount` permanece en cero.
+- Montos cero o negativos se rechazan antes de modificar estado.
+- Una cuenta inexistente no produce escritura.
+- El historial devuelve movimientos en orden cronológico y conserva el saldo histórico posterior a cada operación.
 
 Total: **33 unit tests**.
-
 ## Integration Tests
 
 Los integration tests están en `backend/tests/Banking.IntegrationTests`. Cada test usa `BankingApiFactory`, basada en `WebApplicationFactory<Program>`, para ejecutar el pipeline real de ASP.NET Core.
@@ -121,6 +131,29 @@ La validación manual recorrió:
 8. referencia única de transacción;
 9. saldo histórico posterior;
 10. responsive desktop/mobile.
+
+## Mobile tests
+
+La aplicación Flutter tiene **19 tests** en `mobile/test/` y se valida además con `flutter analyze` y `flutter build apk --debug`.
+
+| Área | Tests | Qué cubre |
+|---|---:|---|
+| `api_error_parser_test.dart` | 3 | ProblemDetails, ValidationProblemDetails y mensaje seguro sin filtrar detalles de conexión |
+| `formatters_test.dart` | 4 | moneda NIO/C$, zona `America/Managua`, normalización/máscara de cuenta y parsing monetario |
+| `validators_test.dart` | 5 | cliente, fecha, género, GUID, formato `ACC-YYYYMMDD-XXXX` y montos |
+| `repositories_test.dart` | 3 | contrato JSON y mapeo de customer, account y transactions |
+| Widget/crash tests | 4 | detalle, búsqueda, validación inline y shell sin excepciones de render |
+| **Total** | **19** | |
+
+Estos tests no sustituyen al backend. Verifican que Mobile respete contratos, formatee correctamente, presente errores seguros y no falle en widgets clave.
+
+Última validación documentada:
+
+```text
+flutter analyze: no issues found
+flutter test: 19 passed
+flutter build apk --debug: correcto
+```
 
 ## Unit vs Integration
 

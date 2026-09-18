@@ -28,6 +28,7 @@ Verificación realizada contra las tres páginas del PDF **Prueba Técnica: Prog
 | Saldo histórico posterior | ✅ Verificado | `BalanceAfterTransaction` persistido | `Transaction.cs`, configuración EF | Tests y UI |
 | Controllers sin DbContext | ✅ Verificado | Solo inyectan servicios de aplicación | `Controllers/` | Revisión estática |
 | Controllers reciben HTTP, invocan servicios y retornan DTOs | ✅ Verificado | Controllers delgados | `CustomersController.cs`, `AccountsController.cs` | Revisión y Swagger |
+| Controllers organizados por recurso/responsabilidad | ✅ Verificado | `CustomersController` separa clientes; `AccountsController` agrupa cuenta, saldo y movimientos sin mezclar reglas de negocio | `Controllers/` | Revisión de dependencias y SRP/cohesión |
 | Prueba específica del generador | ✅ Verificado | Seis pruebas de prefijo, fecha, longitud, dígitos, formato y unicidad | `AccountNumberGeneratorTests.cs` | 6/6 pasan |
 | Manejo global sin try/catch repetitivo | ✅ Verificado | `IExceptionHandler` central | `GlobalExceptionHandler.cs`, `Program.cs` | Integration tests |
 | Excepciones de negocio personalizadas | ✅ Verificado | Excepciones de dominio y aplicación | `Domain/Exceptions/`, `Application/Exceptions/` | Tests |
@@ -56,7 +57,7 @@ Verificación realizada contra las tres páginas del PDF **Prueba Técnica: Prog
 | Restore | ✅ Verificado | Paquetes restaurados | NuGet y package manifests | `dotnet restore`, `npm install` |
 | Build frontend | ✅ Verificado | TypeScript + Vite | `web/` | `npm run build` correcto el 18-09-2026 |
 | Lint frontend | ✅ Verificado | ESLint sin warnings permitidos | `web/` | `npm run lint` correcto el 18-09-2026 |
-| Análisis y tests Mobile | ✅ Verificado | Flutter analyzer y pruebas de parser, formatos, validación, repositorios y widget | `mobile/test/` | 16 correctas el 18-09-2026 |
+| Análisis y tests Mobile | ✅ Verificado | Flutter analyzer y pruebas de parser, formatos, validación, repositorios y widget | `mobile/test/` | 19 correctas el 18-09-2026 |
 | Build Android | ✅ Verificado | APK de depuración | `mobile/android/` | `flutter build apk --debug` correcto el 18-09-2026 |
 | Tests backend | ✅ Verificado | Suite xUnit unit + integration | `Banking.UnitTests`, `Banking.IntegrationTests` | 41 correctas, 0 fallidas, 0 omitidas el 18-09-2026 |
 

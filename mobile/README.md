@@ -63,6 +63,16 @@ lib/
 
 Las validaciones locales mejoran la entrada del formulario. Banking.Api continúa decidiendo si existe el cliente, cuál es el saldo, si un retiro es válido y qué movimientos se persisten.
 
+### Propiedad de datos y reglas
+
+- Mobile **no genera** `AccountNumber`.
+- Mobile **no calcula** el saldo resultante de depósitos o retiros.
+- Mobile **no decide** si hay fondos suficientes.
+- Mobile **no persiste** movimientos.
+- Tras una operación exitosa, Riverpod invalida saldo e historial y vuelve a consultar la API.
+- Los importes recibidos pueden representarse en Dart para presentación, pero la aritmética y las decisiones financieras autoritativas permanecen en el backend con `decimal`.
+- La referencia visible de una transacción puede abreviarse; el `transactionId` completo permanece en `BankTransaction` y el portapapeles recibe el identificador completo.
+
 ## Configurar Banking.Api
 
 La aplicación lee una única variable de compilación: `API_BASE_URL`.
@@ -146,15 +156,16 @@ flutter test
 flutter build apk --debug
 ```
 
-Cobertura de comportamiento:
+Cobertura de comportamiento (**19 tests**):
 
-- parser de ProblemDetails y ValidationProblemDetails;
-- mensajes seguros ante errores de conexión;
-- formato monetario y conversión a `America/Managua`;
-- validadores de cliente, cuenta y montos;
-- contratos y mapeo de repositorios;
-- búsqueda de cuenta con formato inválido en widget test;
-- comprobaciones de renderizado para shell, búsqueda y detalle de cuenta.
+- 3 tests del parser de errores;
+- 4 tests de formatos;
+- 5 tests de validadores;
+- 3 tests de repositorios/contratos;
+- 4 widget/crash tests;
+
+
+Se cubren `ProblemDetails`/`ValidationProblemDetails`, mensajes seguros de red, `es-NI`/`America/Managua`, validación de formularios, contratos de repositorio y widgets clave de búsqueda/detalle/shell.
 
 Última validación, 18 de septiembre de 2026:
 

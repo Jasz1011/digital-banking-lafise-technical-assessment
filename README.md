@@ -160,7 +160,11 @@ Failed: 0
 Skipped: 0
 ```
 
-La suite contiene 33 unit tests y 8 integration tests.
+La suite backend contiene **33 unit tests + 8 integration tests = 41 pruebas**.
+
+La aplicación móvil se valida adicionalmente con **19 tests Flutter**, `flutter analyze` sin incidencias y build APK debug correcto.
+
+La Web se valida con ESLint y build de producción de Vite/TypeScript.
 
 ## Documentación
 
