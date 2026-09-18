@@ -120,6 +120,15 @@ http://localhost:5097/swagger
 
 Swagger documenta requests, responses, estados HTTP y los errores relevantes de cada operación.
 
+## Consumo local desde la Web
+
+`Banking.Api/Program.cs` registra la política CORS `DevelopmentFrontend` solamente en el entorno `Development`. Los orígenes permitidos se definen en `Banking.Api/appsettings.Development.json`:
+
+- `http://localhost:5173`
+- `http://127.0.0.1:5173`
+
+Esta configuración permite que el servidor Vite consuma la API durante el desarrollo. No usa `AllowAnyOrigin` y no habilita una política CORS abierta en producción.
+
 ## Tests
 
 La solución contiene **41 pruebas automatizadas**:
